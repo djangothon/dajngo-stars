@@ -1,0 +1,56 @@
+{% load staticfiles %}
+<div class="penta-complete" style="float:left;">
+    <div class="penta penta-user tool-tip float-left" title="{{user_rating}} out of 5 star">
+        {% spaceless %}
+            {% for x in full_stars %}
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star fa-stack-1x"></i>
+                    <i class="fa fa-star fa-stack-1x"></i>
+                </span>
+            {% endfor %}
+
+            {% for x in half_stars %}
+                <span class="fa-stack fa-lg star-combine">
+                    {% if decoration > 0 %}
+                    <i class="fa fa-star-half fa-stack-1x half-star"></i>
+                    <i class="fa fa-star-o fa-stack-1x empty-star"></i>
+                    {% else %}
+                    <i class="fa fa-star-half fa-stack-1x gray-star"></i>
+                    <i class="fa fa-star-o fa-stack-1x gray-star"></i>
+                    {% endif %}
+                </span>
+            {% endfor %}
+
+            {% for x in empty_stars %}
+            <span class="fa-stack fa-lg star-combine">
+                {% if decoration > 0 %}
+                    <i class="fa fa-star-o fa-stack-1x empty-star"></i>
+                    <i class="fa fa-star-o fa-stack-1x empty-star"></i>
+                    {% else %}
+                    <i class="fa fa-star fa-stack-1x empty-star gray-star"></i>
+                    <i class="fa fa-star fa-stack-1x empty-star gray-star"></i>
+                    {% endif %}
+                </span>
+            {% endfor %}
+        {% endspaceless %}
+    </div>
+    <div class="check-clear float-left less-margin standard-margin-left">
+        {% if decoration > 0 %}
+            {% if show_check %}
+            <i class="fa fa-check fa-green v-align-middle" id="check-mark-{{ctype_id}}-{{object_id}}"></i>
+            <span class="v-align-middle dark small" id="saved-{{ctype_id}}-{{object_id}}">Saved |</span>
+            {% endif %}
+        <a class="ajax-get v-align-middle small" style="cursor: pointer;" name="clear-rating-{{ctype_id}}-{{object_id}}" id="clear-tag-{{ctype_id}}-{{object_id}}" ajax="{% url 'clear_user_rating' ctype_id object_id decoration %}" target="get-rating-{{ctype_id}}-{{object_id}}" success="REPLACE" excuteonce="true">Clear</a>
+        <img src="{% static 'images/ajax_loader.gif' %}" id="img-{{ctype_id}}-{{object_id}}" class="v-align-middle ajax-loader-dimension" style="display:none"/ >
+        {% endif %}
+    </div>
+    <div class="clear"></div>
+</div> <!-- penta-complete -->
+<script type="text/javascript">
+    $(document).on("click","a[name='clear-rating-{{ctype_id}}-{{object_id}}']", function (e) {
+            $('#img-{{ctype_id}}-{{object_id}}').show();
+            $('#clear-tag-{{ctype_id}}-{{object_id}}').hide();
+            $('#saved-{{ctype_id}}-{{object_id}}').hide();
+            $('#check-mark-{{ctype_id}}-{{object_id}}').hide();
+    });
+</script>

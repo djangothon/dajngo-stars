@@ -1,0 +1,49 @@
+
+.penta-complete .penta-star {
+  overflow: hidden;
+  color: #e5e7e8;
+  font-size: 13px;
+  cursor: pointer;
+}
+.penta-complete .penta-star .penta-star-rating {
+  float: right;
+  display: block;
+}
+.penta-complete .penta-star .penta-star-rating:hover,
+.penta-complete .penta-star .penta-star-rating:hover ~ .penta-star-rating {
+  color: #f49020;
+  background-position: 0 0;
+}
+.penta-complete .penta {
+  color: #f49020;
+  font-size: 10px;
+  min-width: 100px;
+}
+.penta-complete .star-combine {
+  width: 1em !important;
+  height: 1em !important;
+  line-height: 1em !important;
+}
+.penta-complete .star-combine .empty-star {
+  color: rgba(244,144,32,0.41);
+  text-align: left !important;
+}
+.penta-complete .star-combine .half-star {
+  text-align: left !important;
+}
+.penta-complete .star-combine .gray-star {
+  color: #e5e7e8;
+}
+.penta-complete .star-combine .yellow-star {
+  color: #f49020;
+}
+.penta-complete .penta-user {
+  font-size: 17px !important;
+}
+.penta-and-social {
+  padding: 20px;
+  background-color: #fffcdf;
+}
+.ajax-loader-dimension {
+  width: 16px;
+}

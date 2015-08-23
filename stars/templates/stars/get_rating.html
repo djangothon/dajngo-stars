@@ -1,0 +1,285 @@
+{% load staticfiles %}
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'css/stars.css' %}">
+<div class="penta-complete" style="float:left;">
+    <form name="get-user-rating-{{ctype_id}}-{{object_id}}" id="get-user-rating-{{ctype_id}}-{{object_id}}" class="ajax-form" method="POST" ajax="{% url 'submit_user_rating' ctype_id object_id decoration %}" success="REPLACE" target="get-user-rating-{{ctype_id}}-{{object_id}}">
+    {% csrf_token %}
+        <div class="penta-star penta-user float-left" id="penta-star-click-{{ctype_id}}-{{object_id}}">
+            <div class="penta-star-rating" value="5">
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-5-1"></i>
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-5-2"></i>
+                </span>
+            </div>
+            <div class="penta-star-rating" value="4">
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-4-1"></i>
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-4-2"></i>
+                </span>
+            </div>
+            <div class="penta-star-rating" value="3">
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-3-1"></i>
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-3-2"></i>
+                </span>
+            </div>
+            <div class="penta-star-rating" value="2">
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-2-1"></i>
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-2-2"></i>
+                </span>
+            </div>
+            <div class="penta-star-rating" value="1">
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-1-1"></i>
+                    <i class="fa fa-star fa-stack-1x" id="star-id-{{ctype_id}}-{{object_id}}-1-2"></i>
+                </span>
+            </div>
+        </div>
+        <input type="submit" class="hidden" id="submit-rating-{{ctype_id}}-{{object_id}}"/>
+        <div class="float-left less-margin standard-margin-left">
+            {% if decoration == 1 %}
+            <img src="{% static 'images/ajax_loader.gif' %}" class="v-align-middle ajax-loader-dimension" id="img-{{ctype_id}}-{{object_id}}" style="display:none"/ >
+            {% endif %}
+        </div>
+        <div class="submit-rating">
+            <input id="rating-{{ctype_id}}-{{object_id}}" name="rating-{{ctype_id}}-{{object_id}}"  type="hidden" value="0"/>
+        </div>
+        <div class="clear"></div>
+    </form>
+</div> <!-- penta-complete -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#penta-star-click-{{ctype_id}}-{{object_id}} .penta-star-rating').on('click', function(e) {
+            var value = $(this).attr('value');
+            if (value !== 'undefined'){
+                if (document.getElementById('rating-{{ctype_id}}-{{object_id}}') !== null){
+                    var val  = parseInt(value);
+                    for (var i = 1; i <= val ; i++){
+                        var id = '#star-id-{{ctype_id}}-{{object_id}}-' + i.toString();
+                        var star_id1 = id + '-1';
+                        var star_id2 = id + '-2';
+                        $(star_id1).addClass('yellow-star');
+                        $(star_id2).addClass('yellow-star');
+                    }
+                    for (var i = val+1; i <= 5; i++){
+                        var id = '#star-id-{{ctype_id}}-{{object_id}}-' + i.toString();
+                        var star_id1 = id + '-1';
+                        var star_id2 = id + '-2';
+                        $(star_id1).removeClass('yellow-star');
+                        $(star_id2).removeClass('yellow-star');
+                    }
+                    $('#rating-{{ctype_id}}-{{object_id}}').val(value);
+                    $('#submit-rating-{{ctype_id}}-{{object_id}}').click();
+                }
+            }
+        });
+        $('#submit-rating-{{ctype_id}}-{{object_id}}').click(function(){
+            $('#img-{{ctype_id}}-{{object_id}}').show();
+        });/*
+        $(".ajax-form input[type=submit]").on('click',function() {
+            $("input[type=submit]", $(this).parents("ajax-form")).removeAttr("pressed");
+            $(this).attr("pressed", "true");
+        });*/
+        /*$(".ajax-form input[type=submit]").on('click',function() {
+            $("input[type=submit]", $(this).parents("ajax-form")).removeAttr("pressed");
+            $(this).attr("pressed", "true");
+        });
+
+        // to submit the form
+        $('.ajax-form').on('submit', function(event) {
+            var $this = $(this);
+
+            // if the form is disabled then
+            // don't let it be submitted
+            if ($this.hasClass('disabled')) {
+                return false;
+            }
+            debugger;
+            var target_id = $this.attr('target');
+            var target;
+            if (target_id) {
+                target = $('#'+target_id);
+            } else {
+                target = null;
+            }
+
+            var input = $this.find("input[type=submit][pressed=true]");
+            var url = $this.attr('ajax');
+            var data = new FormData($(this)[0]);
+            var success = $this.attr('success');
+            var errorList = $this.find('.errorlist');
+            var execute = $this.attr('execute');
+            var execute_on_error = $this.attr('execute-error');
+
+            // append submit as True to the FormData object
+            data.append('submit', 'True');
+            // append pressed input button name, value to the FormData object
+            var input_attr_name = input.attr('name');
+            var input_attr_value = input.attr('value');
+            if(input_attr_name && input_attr_value)
+                data.append(input_attr_name, input_attr_value);
+
+            // reset the content of the error list
+            errorList.hide();
+
+            // remove error class from all input fields
+            $this.find(':input').each(function() {
+                $(this).removeClass('error');
+            });
+
+            // find the submit button for this form and move
+            // it to a transient state
+            var inputs = $this.find('input[type="submit"]:not(.cancel), button');
+
+            // if the input button has clicked class then
+            // return false
+            if (inputs.hasClass('clicked')) {
+                event.preventDefault();
+                return;
+            }
+
+            var input_value = input.val();
+
+            if (input.val() == 'Save' || input.val() == 'save') {
+                input.val('Saving..');
+            } else {
+                var clicked_value = input.attr('clicked');
+                input.val(clicked_value);
+            }
+
+            // add clicked class
+            input.addClass('clicked');
+
+            // default initialization with jquery ajax method
+            var _ajax = $.ajax;
+
+            // track upload progress if the 'show-progress' attribute is set
+            if($this.attr("show-progress")) {
+                // get progressbar parent block
+                var progressbar_block_id = $this.attr("progress-block-id");
+                var progressbar_block = $("#" + progressbar_block_id);
+                // initialize a new 'HEProgressBar' object and bind to the current form
+                var progressbar_widget = new HEProgressBar($this, progressbar_block);
+                // wrapper over jquery ajax method
+                _ajax = progressbar_widget.ajax;
+            }
+
+            // submit the form
+            _ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // execute any function that have to be executed
+                    if (response['status'] == AJAX_OK) {
+                        // if there is any target whose data needs
+                        // to be updated then update that
+                        if (target) {
+                            data = response['data'];
+                            if (success == 'REPLACE') {
+                                target.html(data);
+                            } else {
+                                target.append(data);
+                            }
+                        }
+
+                        // execute any function that needs to be executed
+                        if (execute) {
+                            execute_list = execute.split(" ");
+                            for(var i=0; i < execute_list.length; i++) {
+                                var command = execute_list[i];
+                                window[command]();
+                            }
+                        }
+
+                        // if there is any url in the data then
+                        // it needs to be replaced
+                        if (response['url']) {
+                            window.location.href = response['url'];
+                        } else {
+                            // change the input value to the initial value
+                            input.val(input_value);
+
+                            // remove to the clicked class
+                            input.removeClass('clicked');
+
+                            // show the message only if there is no redirect
+                            var message = $this.find('.save-message');
+                            message.show();
+                            if (!message.hasClass('permanent')) {
+                                message.fadeOut(3000);
+                            }
+                        }
+
+                        // the form may need to be updated after
+                        // the save
+                        if (response['form'])  {
+                            $this.html(response['form']);
+                        }
+
+                    } else {
+
+                        // change the input value to the initial value
+                        input.val(input_value);
+
+                        // remove to the clicked class
+                        input.removeClass('clicked');
+
+                        // add the errors to the errorlist div
+                        if (response['form'])  {
+                            $this.html(response['form']);
+                        }
+
+                        var errors = response['errors'];
+                        for (var i=0; i < errors.length; i++) {
+                            var err = errors[i];
+                            var input_field = $this.find('#id_'+err.field);
+                            input_field.addClass('error');
+                            var error_html = '<li>' + capitalize(err.field) + ':  ' + err.error +  '</li>';
+                            errorList.append(error_html);
+                        }
+
+                        // execute any function that needs to be executed if form errors
+                        if (execute_on_error) {
+                            execute_list = execute_on_error.split(" ");
+                            for(var i=0; i < execute_list.length; i++) {
+                                var command = execute_list[i];
+                                window[command]();
+                            }
+                        }
+                    }
+
+                    if (response['messages']) {
+                        messages = response['messages'];
+                        for (var i = 0; i < messages.length; i++) {
+                            addAlert(messages[i]);
+                        };
+                    }
+                },
+                error: function(response) {
+                    // change the input value to the initial value
+                    input.val(input_value);
+
+                    // remove to the clicked class
+                    input.removeClass('clicked');
+                },
+                statusCode: {
+                    404: function() {
+                        alert("There was some error in accessing the resource, re-loading the page.");
+                        window.location.reload();
+                    },
+                    403: function() {
+                        window.location.reload();
+                    }
+                }
+            });
+
+            // cancel the submit action
+            return false;
+        });*/
+        // end function to submit any form
+    });
+</script>

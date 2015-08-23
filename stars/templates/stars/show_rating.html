@@ -1,0 +1,38 @@
+<div class="penta-complete">
+{% if no_rating %}
+    <div class="penta tool-tip" title="No rating">
+{% else %}
+    <div class="penta tool-tip" title="{{avg_rating}} out of 5 star">
+{% endif %}
+        {% spaceless %}
+            {% for x in full_stars %}
+                   <span class="fa-stack fa-lg star-combine">
+                        <i class="fa fa-star fa-stack-1x"></i>
+                        <i class="fa fa-star fa-stack-1x"></i>
+                    </span>
+            {% endfor %}
+
+            {% for x in half_stars %}
+                <span class="fa-stack fa-lg star-combine">
+                    <i class="fa fa-star-half fa-stack-1x half-star"></i>
+                    <i class="fa fa-star-o fa-stack-1x empty-star"></i>
+                </span>
+            {% endfor %}
+
+            {% for x in empty_stars %}
+                 {% if no_rating %}
+                    <span class="fa-stack fa-lg star-combine">
+                        <i class="fa fa-star fa-stack-1x gray-star"></i>
+                        <i class="fa fa-star fa-stack-1x gray-star"></i>
+                    </span>
+                {% else %}
+                    <span class="fa-stack fa-lg star-combine">
+                        <i class="fa fa-star-o fa-stack-1x empty-star"></i>
+                        <i class="fa fa-star-o fa-stack-1x empty-star"></i>
+                    </span>
+                {% endif %}
+            {% endfor %}
+        {% endspaceless %}
+        <div class="clear"></div>
+    </div>
+</div> <!-- penta-complete -->
